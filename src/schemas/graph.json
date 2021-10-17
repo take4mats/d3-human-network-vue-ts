@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "Edge": {
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string" },
+        "target": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "required": ["source", "target", "value"],
+      "type": "object"
+    },
+    "Node": {
+      "additionalProperties": false,
+      "properties": {
+        "group": { "type": "string" },
+        "id": { "type": "string" }
+      },
+      "required": ["id", "group"],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "edges": {
+      "items": { "$ref": "#/definitions/Edge" },
+      "type": "array"
+    },
+    "nodes": {
+      "items": { "$ref": "#/definitions/Node" },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}
