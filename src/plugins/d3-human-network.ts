@@ -216,7 +216,7 @@ function highlight(_event: any, data: any) {
 // ----
 // main
 // ----
-export const d3Render = function (data: any): void {
+export const d3HumanNetwork = function (data: any): void {
   d3.select("#graph > svg").remove();
 
   const svg = d3
