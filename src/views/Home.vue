@@ -1,6 +1,6 @@
 <template>
-  <div class="dev">
-    <human-network msg="Welcome to Your Vue.js + TypeScript App" />
+  <div id="home" class="grey lighten-1">
+    <human-network />
   </div>
 </template>
 
