@@ -19,10 +19,10 @@ Human network visualization web app based with D3.js, Vue.js and TypeScript.
 2. Run locally
     - Run some http server locally like below commands (doesn't have to be python but any):
         ```sh
-        $ cd src/
-        $ python -m http.server
+        $ npm i
+        $ npm run serve
         ```
-    - And then navigate your browser to the URL (e.g. http://localhost:8000)
+    - And then navigate your browser to the URL (e.g. http://localhost:8080)
     - Yes!  Now you will see like below diagram:
 
         ![demo.gif](https://github.com/take4mats/human-network-d3-vue-ts/blob/main/demo.gif?raw=true)
