@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 @take4mats
+  Copyright 2021 Takeshi George Matsuda (https://github.com/take4mats)
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
