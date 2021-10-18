@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app dense flat color="primary" dark>
+    <v-app-bar app dense flat class="primary" dark hide-on-scroll>
       <v-btn to="/" text plain>
         <v-icon>mdi-star-david</v-icon>
         &nbsp;
@@ -21,6 +21,12 @@
     <v-main>
       <router-view />
     </v-main>
+
+    <v-footer padless dark>
+      <v-col class="text-left" cols="12">
+        Copyright {{ new Date().getFullYear() }} @take4mats
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
