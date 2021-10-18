@@ -1,4 +1,4 @@
-# human-network-d3-vue-ts
+# d3-human-network (wrapped with Vue,TS)
 Human network visualization web app based with D3.js, Vue.js and TypeScript.
 
 ## Feature
