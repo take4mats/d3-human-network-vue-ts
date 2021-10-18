@@ -1,16 +1,24 @@
 <template>
-  <hello-world />
+  <div class="dev">
+    <human-network msg="Welcome to Your Vue.js + TypeScript App" />
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import HelloWorld from "../components/HelloWorld.vue";
+import {
+  defineComponent,
+  // reactive,
+  // computed,
+  // watch,
+  // onMounted,
+} from "@vue/composition-api";
 
-export default Vue.extend({
+import HumanNetwork from "@/components/HumanNetwork.vue"; // @ is an alias to /src
+
+export default defineComponent({
   name: "Home",
-
   components: {
-    HelloWorld,
+    HumanNetwork,
   },
 });
 </script>
