@@ -239,22 +239,6 @@ import { d3HumanNetwork } from "@/plugins/d3-human-network";
 import * as Ajv from "ajv";
 import GraphSchema from "@/schemas/graph";
 import { Node, Edge, Graph, Member } from "@/types/graph";
-// interface Node {
-//   id: string;
-//   group: string;
-// }
-
-// interface Edge {
-//   source: string;
-//   target: string;
-//   value: string;
-// }
-
-// interface Graph {
-//   nodes: Node[];
-//   edges: Edge[];
-// }
-// type Member = string;
 
 export default defineComponent({
   name: "HumanNetwork",
@@ -361,7 +345,6 @@ export default defineComponent({
     },
 
     saveJsonData(): void {
-      // TODO: 入力値が JSON として invalid な場合のケア
       if (this.$refs.form2.validate() === true) {
         this.graph = JSON.parse(this.jsonInput);
         this.formInput = JSON.parse(this.jsonInput);
