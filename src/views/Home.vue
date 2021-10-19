@@ -1,5 +1,5 @@
 <template>
-  <div id="home" class="grey lighten-1">
+  <div id="home" class="grey lighten-1" style="height: 100%">
     <human-network />
   </div>
 </template>
