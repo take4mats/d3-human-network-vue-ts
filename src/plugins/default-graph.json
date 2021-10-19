@@ -1,0 +1,37 @@
+{
+  "nodes": [
+    {
+      "id": "John",
+      "group": "vocals"
+    },
+    {
+      "id": "Paul",
+      "group": "bass"
+    },
+    {
+      "id": "George",
+      "group": "guitars"
+    },
+    {
+      "id": "Ringo",
+      "group": "drums"
+    }
+  ],
+  "edges": [
+    {
+      "source": "John",
+      "target": "Paul",
+      "value": "secret lovers"
+    },
+    {
+      "source": "Paul",
+      "target": "Ringo",
+      "value": "rivals of destiny"
+    },
+    {
+      "source": "Ringo",
+      "target": "George",
+      "value": "regard as alian mutually"
+    }
+  ]
+}
