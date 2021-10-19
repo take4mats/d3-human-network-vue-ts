@@ -145,17 +145,54 @@
                 <!-- submission buttons -->
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn color="default" rounded @click="formButtonReset">
-                    Reset
-                  </v-btn>
-                  <v-btn
-                    color="primary"
-                    rounded
-                    :disabled="!validForm1"
-                    @click="saveFormData"
-                  >
-                    Save
-                  </v-btn>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="warning"
+                        rounded
+                        @click="buttonInitialize"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Initialize
+                      </v-btn>
+                    </template>
+                    <span>LocalStorage cache will be erased.</span>
+                  </v-tooltip>
+
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="default"
+                        rounded
+                        @click="buttonRestore"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Restore
+                      </v-btn>
+                    </template>
+                    <span>Form data restored from the LocalStorage cache.</span>
+                  </v-tooltip>
+
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="primary"
+                        rounded
+                        :disabled="!validForm1"
+                        @click="buttonSaveData1"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Save
+                      </v-btn>
+                    </template>
+                    <span>Save data and update the graph.</span>
+                  </v-tooltip>
                 </v-card-actions>
               </v-card>
             </v-tab-item>
@@ -183,14 +220,54 @@
 
                 <v-card-actions>
                   <v-spacer />
-                  <v-btn
-                    color="primary"
-                    rounded
-                    :disabled="!validForm2"
-                    @click="saveJsonData"
-                  >
-                    Save
-                  </v-btn>
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="warning"
+                        rounded
+                        @click="buttonInitialize"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Initialize
+                      </v-btn>
+                    </template>
+                    <span>LocalStorage cache will be erased.</span>
+                  </v-tooltip>
+
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="default"
+                        rounded
+                        @click="buttonRestore"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Restore
+                      </v-btn>
+                    </template>
+                    <span>Form data restored from the LocalStorage cache.</span>
+                  </v-tooltip>
+
+                  <v-tooltip top>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        class="mx-2"
+                        color="primary"
+                        rounded
+                        :disabled="!validForm2"
+                        @click="buttonSaveData2"
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        Save
+                      </v-btn>
+                    </template>
+                    <span> Save data and update the graph. </span>
+                  </v-tooltip>
                 </v-card-actions>
               </v-card>
             </v-tab-item>
@@ -228,16 +305,11 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  // reactive,
-  // computed,
-  // watch,
-  // onMounted,
-} from "@vue/composition-api";
+import { defineComponent, del } from "@vue/composition-api";
 import { d3HumanNetwork } from "@/plugins/d3-human-network";
 import * as Ajv from "ajv";
 import GraphSchema from "@/schemas/graph";
+import DefaultGraph from "@/plugins/default-graph";
 import { Node, Edge, Graph, Member } from "@/types/graph";
 
 export default defineComponent({
@@ -249,23 +321,8 @@ export default defineComponent({
     validForm2: true as boolean,
 
     graph: {
-      nodes: [
-        {
-          id: "Dave",
-          group: "dev",
-        },
-        {
-          id: "Kris",
-          group: "pdm",
-        },
-      ],
-      edges: [
-        {
-          source: "Dave",
-          target: "Kris",
-          value: "band members",
-        },
-      ],
+      nodes: [],
+      edges: [],
     } as Graph,
 
     formInput: {
@@ -292,10 +349,7 @@ export default defineComponent({
   },
 
   mounted: function () {
-    if (localStorage.humanNetworkGraph) {
-      this.graph = JSON.parse(localStorage.humanNetworkGraph);
-    }
-    this.initInput();
+    this.restoreInput();
   },
 
   methods: {
@@ -328,23 +382,33 @@ export default defineComponent({
       }
     },
 
-    formButtonReset() {
-      return true;
-    },
-
-    initInput(): void {
+    // Restore input data from saved localStorage data.
+    restoreInput(): void {
+      if (!localStorage.humanNetworkGraph) {
+        localStorage.humanNetworkGraph = JSON.stringify(DefaultGraph);
+      }
+      this.graph = JSON.parse(localStorage.humanNetworkGraph);
       this.formInput = this.graph;
       this.jsonInput = JSON.stringify(this.graph, null, 4);
     },
 
-    saveFormData(): void {
+    buttonInitialize() {
+      delete localStorage.humanNetworkGraph;
+      this.restoreInput();
+    },
+
+    buttonRestore() {
+      this.restoreInput();
+    },
+
+    buttonSaveData1(): void {
       if (this.$refs.form1.validate() === true) {
         this.graph = JSON.parse(JSON.stringify(this.formInput, null, 4));
         this.jsonInput = JSON.stringify(this.formInput, null, 4);
       }
     },
 
-    saveJsonData(): void {
+    buttonSaveData2(): void {
       if (this.$refs.form2.validate() === true) {
         this.graph = JSON.parse(this.jsonInput);
         this.formInput = JSON.parse(this.jsonInput);
