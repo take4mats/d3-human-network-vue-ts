@@ -24,7 +24,7 @@
 
     <v-footer padless dark>
       <v-col class="text-left" cols="12">
-        Copyright {{ new Date().getFullYear() }} @take4mats
+        Copyright {{ new Date().getFullYear() }} @take4mats (george)
       </v-col>
     </v-footer>
   </v-app>
