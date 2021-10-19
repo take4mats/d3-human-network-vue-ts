@@ -1,7 +1,7 @@
 # d3-human-network (wrapped with Vue,TS)
 Human network visualization web app based with D3.js, Vue.js and TypeScript.
 
-Check out [the real app running here.](https://take4mats.github.io/d3-human-network-vue-ts/)
+Check out [the real app running here.](https://take4mats.github.io/d3-human-network-vue-ts/) (a quick image below)
 
 ![demo.png](https://github.com/take4mats/d3-human-network-vue-ts/blob/feature/cicd-github-actions/demo.png?raw=true)
 
