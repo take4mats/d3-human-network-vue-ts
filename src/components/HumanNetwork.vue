@@ -305,9 +305,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, del } from "@vue/composition-api";
+// eslint-disable-next-line
+// @ts-nocheck
+import { defineComponent } from "@vue/composition-api";
 import { d3HumanNetwork } from "@/plugins/d3-human-network";
-import * as Ajv from "ajv";
+import Ajv from "ajv";
 import GraphSchema from "@/schemas/graph";
 import DefaultGraph from "@/plugins/default-graph";
 import { Node, Edge, Graph, Member } from "@/types/graph";
@@ -415,12 +417,14 @@ export default defineComponent({
       }
     },
 
+    // eslint-disable-next-line
     textFieldRule(item: any): true | string {
       if (!item) return "This field is required";
       if (item === "") return "This field cannot be empty";
       return true;
     },
 
+    // eslint-disable-next-line
     memberFieldRule(item: any): true | string {
       if (!item) return "This field is required";
       if (item === "") return "This field cannot be empty";
@@ -439,7 +443,8 @@ export default defineComponent({
           console.log(validate.errors);
           return JSON.stringify(validate.errors, null, 4);
         }
-      } catch (error) {
+        // eslint-disable-next-line
+      } catch (error: any) {
         return error.message;
       }
 

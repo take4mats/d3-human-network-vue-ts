@@ -10,7 +10,7 @@
       <v-spacer></v-spacer>
 
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        href="https://github.com/take4mats/d3-human-network-vue-ts"
         target="_blank"
         text
       >
