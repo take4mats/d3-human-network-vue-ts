@@ -213,6 +213,16 @@ function highlight(_event: any, data: any) {
     });
 }
 
+function clearHighlight(event: any, data: any) {
+  if (Object.prototype.toString.call(event.path[0]) === '[object SVGSVGElement]') {
+    // cancel all the suppression
+    d3.selectAll("circle").classed("node-suppressed", () => false);
+    d3.selectAll("text.node-label").classed("node-label-suppressed", () => false);
+    d3.selectAll("line").classed("edge-suppressed", () => false);
+    d3.selectAll("text.edge-label").classed("edge-label-suppressed", () => false);
+  }
+}
+
 // ----
 // main
 // ----
@@ -224,8 +234,8 @@ export const d3HumanNetwork = function (data: any): void {
     .append("svg")
     .attr("height", height)
     .attr("width", width)
-    .attr("viewBox", `0 0 ${width} ${height}`);
-  // .attr("viewBox", [0, 0, width, height]);
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .on('click', (event: any, data: any) => clearHighlight(event, data));
   const g = svg.append("g").attr("cursor", "grab");
 
   const simulation = defineSimulation(data.nodes, data.edges);
