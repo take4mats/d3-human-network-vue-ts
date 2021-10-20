@@ -481,16 +481,16 @@ line {
   stroke-width: 5px;
   stroke-opacity: 0.6;
 }
-.link-label {
+.edge-label {
   text-anchor: middle;
   fill: black;
   font-size: 12px;
 }
-.link-suppressed {
+.edge-suppressed {
   stroke: grey;
   stroke-width: 1px;
 }
-.link-label-suppressed {
+.edge-label-suppressed {
   fill: #ccc;
   font-size: 5px;
 }
