@@ -1,7 +1,7 @@
 {
-  "name": "vue2-typescript-vuetify-form",
-  "version": "0.1.0",
-  "private": true,
+  "name": "d3-human-network-vue-ts",
+  "version": "1.0.1",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
