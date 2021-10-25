@@ -58,7 +58,7 @@ function render(
 const color = d3.scaleOrdinal(d3.schemeTableau10);
 
 // add node data&element
-function defineNodes(d3g: any, nodes: any, drag: any) {
+function defineNodes(d3g: any, nodes: any, drag: any, tooltip: any) {
   // define node g
   const n = d3g
     .append("g")
@@ -86,6 +86,20 @@ function defineNodes(d3g: any, nodes: any, drag: any) {
 
   // enable click action
   n.on("click", (event: any, data: any) => highlight(event, data));
+
+  // enable mouse-over/move/out action
+  n.on("mouseover", (_e: any, d: any) => {
+    console.log(`d: ${JSON.stringify(d)}`);
+    tooltip.style("visibility", "visible").html(`group: ${d.group}`);
+  })
+    .on("mousemove", () => {
+      tooltip
+        .style("top", event.pageY - 40 + "px")
+        .style("left", event.pageX + 20 + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.style("visibility", "hidden");
+    });
 
   return n;
 }
@@ -214,12 +228,20 @@ function highlight(_event: any, data: any) {
 }
 
 function clearHighlight(event: any, data: any) {
-  if (Object.prototype.toString.call(event.path[0]) === '[object SVGSVGElement]') {
+  if (
+    Object.prototype.toString.call(event.path[0]) === "[object SVGSVGElement]"
+  ) {
     // cancel all the suppression
     d3.selectAll("circle").classed("node-suppressed", () => false);
-    d3.selectAll("text.node-label").classed("node-label-suppressed", () => false);
+    d3.selectAll("text.node-label").classed(
+      "node-label-suppressed",
+      () => false
+    );
     d3.selectAll("line").classed("edge-suppressed", () => false);
-    d3.selectAll("text.edge-label").classed("edge-label-suppressed", () => false);
+    d3.selectAll("text.edge-label").classed(
+      "edge-label-suppressed",
+      () => false
+    );
   }
 }
 
@@ -235,7 +257,7 @@ export const d3HumanNetwork = function (data: any): void {
     .attr("height", height)
     .attr("width", width)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .on('click', (event: any, data: any) => clearHighlight(event, data));
+    .on("click", (event: any, data: any) => clearHighlight(event, data));
   const g = svg.append("g").attr("cursor", "grab");
 
   const simulation = defineSimulation(data.nodes, data.edges);
@@ -243,6 +265,11 @@ export const d3HumanNetwork = function (data: any): void {
   const zoom = defineZoom(g);
   const edges = defineLinks(g, data.edges);
   const edgeLabels = defineLinkLabels(g);
-  const nodes = defineNodes(g, data.nodes, drag);
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("z-index", 1000);
+  const nodes = defineNodes(g, data.nodes, drag, tooltip);
   render(svg, zoom, simulation, nodes, edges, edgeLabels);
 };

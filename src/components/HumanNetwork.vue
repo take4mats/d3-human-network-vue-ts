@@ -494,4 +494,19 @@ line {
   fill: #ccc;
   font-size: 5px;
 }
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  font: 12px;
+  fill: black;
+  background: white;
+  -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8);
+  visibility: hidden;
+}
 </style>
