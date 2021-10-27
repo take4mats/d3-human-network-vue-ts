@@ -421,6 +421,7 @@ export default defineComponent({
     textFieldRule(item: any): true | string {
       if (!item) return "This field is required";
       if (item === "") return "This field cannot be empty";
+      if (item.includes(" ")) return "Cannot use space";
       return true;
     },
 
@@ -469,7 +470,7 @@ circle {
 }
 .node-label {
   text-anchor: middle;
-  fill: black;
+  color: black;
   font-size: 12px;
 }
 .node-label-suppressed {
@@ -483,7 +484,7 @@ line {
 }
 .edge-label {
   text-anchor: middle;
-  fill: black;
+  color: black;
   font-size: 12px;
 }
 .edge-suppressed {
@@ -491,7 +492,23 @@ line {
   stroke-width: 1px;
 }
 .edge-label-suppressed {
-  fill: #ccc;
+  color: #ccc;
   font-size: 5px;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: left;
+  width: auto;
+  height: auto;
+  padding: 5px;
+  font-size: 12px;
+  color: white;
+  background: #333;
+  border-radius: 5px;
+  opacity: 0.8;
+  -webkit-box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+  -moz-box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 1);
 }
 </style>

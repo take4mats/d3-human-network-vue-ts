@@ -16,8 +16,7 @@
 
 import * as d3 from "d3";
 
-const theta = Math.PI * (3 - Math.sqrt(5));
-const width = 800;
+const width = 1200;
 const height = 800;
 const circleRadius = 20; // circle circleRadius
 const edgeDistance = 200;
@@ -58,7 +57,7 @@ function render(
 const color = d3.scaleOrdinal(d3.schemeTableau10);
 
 // add node data&element
-function defineNodes(d3g: any, nodes: any, drag: any) {
+function defineNodes(d3g: any, nodes: any, drag: any, tooltip: any) {
   // define node g
   const n = d3g
     .append("g")
@@ -85,7 +84,7 @@ function defineNodes(d3g: any, nodes: any, drag: any) {
   n.call(drag);
 
   // enable click action
-  n.on("click", (event: any, data: any) => highlight(event, data));
+  n.on("click", (event: any, data: any) => highlight(event, data, tooltip));
 
   return n;
 }
@@ -130,7 +129,8 @@ function defineSimulation(nodes: any, edges: any) {
         .id((d: any) => d.id)
     )
     .force("charge", d3.forceManyBody().strength(chargeStrength))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .alphaMin(0.02);
 
   return sim;
 }
@@ -149,7 +149,7 @@ function defineDrag(simulation: any) {
   }
 
   function dragended(event: any) {
-    if (!event.active) simulation.alphaTarget(0);
+    if (!event.active) simulation.alphaTarget(0).alphaMin(0.2);
     event.subject.fx = null;
     event.subject.fy = null;
   }
@@ -171,12 +171,12 @@ function defineZoom(d3g: any) {
     });
 }
 
-function highlight(_event: any, data: any) {
+function highlight(event: any, data: any, tooltip: any) {
   // first, suppress all
-  d3.selectAll("circle").classed("node-suppressed", () => true);
-  d3.selectAll("text.node-label").classed("node-label-suppressed", () => true);
-  d3.selectAll("line").classed("edge-suppressed", () => true);
-  d3.selectAll("text.edge-label").classed("edge-label-suppressed", () => true);
+  d3.selectAll("circle").classed("node-suppressed", true);
+  d3.selectAll("text.node-label").classed("node-label-suppressed", true);
+  d3.selectAll("line").classed("edge-suppressed", true);
+  d3.selectAll("text.edge-label").classed("edge-label-suppressed", true);
 
   // next, highlight clicked node
   d3.select(`#node-${data.id}`)
@@ -211,15 +211,34 @@ function highlight(_event: any, data: any) {
       d3.select(edgeId).select("line").classed("edge-suppressed", false);
       d3.select(edgeId).select("text").classed("edge-label-suppressed", false);
     });
+
+  // show tooltip for the clicked node
+  tooltip
+    .style("visibility", "visible")
+    .html(
+      Object.keys(data)
+        .map((key) => {
+          if (!["index", "x", "y", "vx", "vy", "fx", "fy"].includes(key))
+            return `<li>${key}: ${data[key]}</li>`;
+        })
+        .join("")
+    )
+    .style("top", event.pageY + 20 + "px")
+    .style("left", event.pageX + "px");
 }
 
-function clearHighlight(event: any, data: any) {
-  if (Object.prototype.toString.call(event.path[0]) === '[object SVGSVGElement]') {
+function clearHighlight(event: any, data: any, tooltip: any) {
+  if (
+    Object.prototype.toString.call(event.path[0]) === "[object SVGSVGElement]"
+  ) {
     // cancel all the suppression
     d3.selectAll("circle").classed("node-suppressed", () => false);
-    d3.selectAll("text.node-label").classed("node-label-suppressed", () => false);
+    d3.selectAll("text.node-label").classed("node-label-suppressed", false);
     d3.selectAll("line").classed("edge-suppressed", () => false);
-    d3.selectAll("text.edge-label").classed("edge-label-suppressed", () => false);
+    d3.selectAll("text.edge-label").classed("edge-label-suppressed", false);
+
+    // hide the tooltip
+    tooltip.style("visibility", "hidden");
   }
 }
 
@@ -235,14 +254,22 @@ export const d3HumanNetwork = function (data: any): void {
     .attr("height", height)
     .attr("width", width)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .on('click', (event: any, data: any) => clearHighlight(event, data));
+    .on("click", (event: any, data: any) =>
+      clearHighlight(event, data, tooltip)
+    );
   const g = svg.append("g").attr("cursor", "grab");
+  const tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("visibility", "hidden")
+    .style("z-index", 1000);
 
   const simulation = defineSimulation(data.nodes, data.edges);
   const drag = defineDrag(simulation);
   const zoom = defineZoom(g);
   const edges = defineLinks(g, data.edges);
   const edgeLabels = defineLinkLabels(g);
-  const nodes = defineNodes(g, data.nodes, drag);
+  const nodes = defineNodes(g, data.nodes, drag, tooltip);
   render(svg, zoom, simulation, nodes, edges, edgeLabels);
 };
