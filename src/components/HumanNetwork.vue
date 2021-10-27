@@ -421,6 +421,7 @@ export default defineComponent({
     textFieldRule(item: any): true | string {
       if (!item) return "This field is required";
       if (item === "") return "This field cannot be empty";
+      if (item.includes(" ")) return "Cannot use space";
       return true;
     },
 
