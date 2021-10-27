@@ -84,7 +84,27 @@ function defineNodes(d3g: any, nodes: any, drag: any, tooltip: any) {
   n.call(drag);
 
   // enable click action
-  n.on("click", (event: any, data: any) => highlight(event, data, tooltip));
+  n.on("click", (event: any, data: any) => highlight(event, data));
+
+  // enable mouse-over/move/out action
+  n.on("mouseover", (_e: any, data: any) => {
+    tooltip.style("visibility", "visible").html(
+      Object.keys(data)
+        .map((key) => {
+          if (!["index", "x", "y", "vx", "vy", "fx", "fy"].includes(key))
+            return `<li>${key}: ${data[key]}</li>`;
+        })
+        .join("")
+    );
+  })
+    .on("mousemove", (event: any) => {
+      tooltip
+        .style("top", event.pageY - 60 + "px")
+        .style("left", event.pageX + 20 + "px");
+    })
+    .on("mouseout", () => {
+      tooltip.style("visibility", "hidden");
+    });
 
   return n;
 }
@@ -171,7 +191,7 @@ function defineZoom(d3g: any) {
     });
 }
 
-function highlight(event: any, data: any, tooltip: any) {
+function highlight(_event: any, data: any) {
   // first, suppress all
   d3.selectAll("circle").classed("node-suppressed", true);
   d3.selectAll("text.node-label").classed("node-label-suppressed", true);
@@ -211,23 +231,9 @@ function highlight(event: any, data: any, tooltip: any) {
       d3.select(edgeId).select("line").classed("edge-suppressed", false);
       d3.select(edgeId).select("text").classed("edge-label-suppressed", false);
     });
-
-  // show tooltip for the clicked node
-  tooltip
-    .style("visibility", "visible")
-    .html(
-      Object.keys(data)
-        .map((key) => {
-          if (!["index", "x", "y", "vx", "vy", "fx", "fy"].includes(key))
-            return `<li>${key}: ${data[key]}</li>`;
-        })
-        .join("")
-    )
-    .style("top", event.pageY + 20 + "px")
-    .style("left", event.pageX + "px");
 }
 
-function clearHighlight(event: any, data: any, tooltip: any) {
+function clearHighlight(event: any, _data: any) {
   if (
     Object.prototype.toString.call(event.path[0]) === "[object SVGSVGElement]"
   ) {
@@ -236,9 +242,6 @@ function clearHighlight(event: any, data: any, tooltip: any) {
     d3.selectAll("text.node-label").classed("node-label-suppressed", false);
     d3.selectAll("line").classed("edge-suppressed", () => false);
     d3.selectAll("text.edge-label").classed("edge-label-suppressed", false);
-
-    // hide the tooltip
-    tooltip.style("visibility", "hidden");
   }
 }
 
@@ -254,9 +257,7 @@ export const d3HumanNetwork = function (data: any): void {
     .attr("height", height)
     .attr("width", width)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .on("click", (event: any, data: any) =>
-      clearHighlight(event, data, tooltip)
-    );
+    .on("click", (event: any, data: any) => clearHighlight(event, data));
   const g = svg.append("g").attr("cursor", "grab");
   const tooltip = d3
     .select("body")
