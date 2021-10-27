@@ -16,7 +16,7 @@
 
 import * as d3 from "d3";
 
-const width = 800;
+const width = 1200;
 const height = 800;
 const circleRadius = 20; // circle circleRadius
 const edgeDistance = 200;
