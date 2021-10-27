@@ -129,7 +129,8 @@ function defineSimulation(nodes: any, edges: any) {
         .id((d: any) => d.id)
     )
     .force("charge", d3.forceManyBody().strength(chargeStrength))
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .alphaMin(0.02);
 
   return sim;
 }
@@ -148,7 +149,7 @@ function defineDrag(simulation: any) {
   }
 
   function dragended(event: any) {
-    if (!event.active) simulation.alphaTarget(0);
+    if (!event.active) simulation.alphaTarget(0).alphaMin(0.2);
     event.subject.fx = null;
     event.subject.fy = null;
   }
