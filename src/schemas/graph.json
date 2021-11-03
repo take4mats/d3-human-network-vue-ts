@@ -16,9 +16,9 @@
       "additionalProperties": false,
       "properties": {
         "group": { "type": "string" },
-        "id": { "type": "string" }
+        "name": { "type": "string" }
       },
-      "required": ["id", "group"],
+      "required": ["name", "group"],
       "type": "object"
     }
   },

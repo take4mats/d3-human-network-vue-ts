@@ -32,9 +32,9 @@
                     >
                       <v-col cols="12" md="4">
                         <v-text-field
-                          v-model="node.id"
-                          :rules="[textFieldRule(node.id)]"
-                          label="Id"
+                          v-model="node.name"
+                          :rules="[textFieldRule(node.name)]"
+                          label="Name"
                           required
                         />
                       </v-col>
@@ -338,7 +338,7 @@ export default defineComponent({
   computed: {
     members: function (): Member[] {
       return this.formInput.nodes.map((node: Node) => {
-        return node.id;
+        return node.name;
       });
     },
   },
@@ -357,7 +357,7 @@ export default defineComponent({
   methods: {
     addNode(): void {
       let emptyNode: Node = {
-        id: "",
+        name: "",
         group: "",
       };
       this.formInput.nodes.push(emptyNode);
