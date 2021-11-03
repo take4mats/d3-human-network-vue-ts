@@ -15,6 +15,7 @@
 */
 
 import * as d3 from "d3";
+import { Node, Edge, Graph, D3Graph, D3Edge, D3Node } from "@/types/graph";
 
 const width = 1200;
 const height = 800;
@@ -56,29 +57,59 @@ function render(
 // color utility
 const color = d3.scaleOrdinal(d3.schemeTableau10);
 
+function generateGraphData(data: Graph): D3Graph {
+  const nodes = data.nodes.map((node: Node, index: number) => {
+    return {
+      _id: String(index),
+      name: node.name,
+      group: node.group,
+    };
+  });
+
+  const edges: D3Edge[] = data.edges.map((edge: Edge, index: number) => {
+    const src = nodes.find((ele) => ele.name === edge.source) || {
+      _id: "9999",
+    };
+    const tgt = nodes.find((ele) => ele.name === edge.target) || {
+      _id: "9999",
+    };
+    return {
+      _id: String(index),
+      source: src._id,
+      target: tgt._id,
+      value: edge.value,
+    };
+  });
+
+  return {
+    nodes: nodes,
+    edges: edges,
+  };
+}
+
 // add node data&element
-function defineNodes(d3g: any, nodes: any, drag: any, tooltip: any) {
+function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
   // define node g
   const n = d3g
     .append("g")
     .attr("class", "nodes")
     .selectAll("circle")
-    .data(nodes)
+    .data(d3nodes)
     .enter()
     .append("g")
-    .attr("id", (d: any) => `node-${d.id}`)
+    .attr("id", (d: D3Node) => `node-${d._id}`)
     .attr("class", () => "node");
 
   // define circle under node g
   n.append("circle")
     .attr("r", circleRadius)
-    .attr("fill", (d: any) => color(d.group));
+    .attr("fill", (d: D3Node) => color(d.group));
 
   // define text under node g
   n.append("text")
     .attr("class", "node-label")
     .style("pointer-events", "none")
-    .text((d: any) => d.id);
+    .text((d: D3Node) => d.name);
 
   // enable drag
   n.call(drag);
@@ -110,22 +141,25 @@ function defineNodes(d3g: any, nodes: any, drag: any, tooltip: any) {
 }
 
 // add edge data&element
-function defineLinks(d3g: any, edges: any) {
+function defineEdges(d3g: any, d3edges: D3Edge[]) {
   const l = d3g
     .append("g")
     .attr("class", "edges")
     .selectAll("line")
-    .data(edges)
+    .data(d3edges)
     .enter()
     .append("g")
-    .attr("id", (d: any) => `edge-${d.source.id}-${d.target.id}-`)
+    .attr("id", (d: any) => {
+      console.log(d);
+      return `edge-${d.source._id}-${d.target._id}-`;
+    })
     .attr("class", () => "edge")
     .append("line");
 
   return l;
 }
 
-function defineLinkLabels(d3g: any) {
+function defineEdgeLabels(d3g: any) {
   const ll = d3g
     .selectAll(".edges > g")
     .append("text")
@@ -138,15 +172,15 @@ function defineLinkLabels(d3g: any) {
 }
 
 // create a new force simulation graph
-function defineSimulation(nodes: any, edges: any) {
+function defineSimulation(d3nodes: any, d3edges: any) {
   const sim = d3
-    .forceSimulation(nodes)
+    .forceSimulation(d3nodes)
     .force(
       "link",
       d3
-        .forceLink(edges)
+        .forceLink(d3edges)
         .distance(() => edgeDistance)
-        .id((d: any) => d.id)
+        .id((d: any) => d._id)
     )
     .force("charge", d3.forceManyBody().strength(chargeStrength))
     .force("center", d3.forceCenter(width / 2, height / 2))
@@ -186,7 +220,7 @@ function defineZoom(d3g: any) {
   return d3
     .zoom()
     .scaleExtent([0.1, 10])
-    .on("zoom", function (event: any) {
+    .on("zoom", function (event) {
       d3g.attr("transform", event.transform);
     });
 }
@@ -199,25 +233,25 @@ function highlight(_event: any, data: any) {
   d3.selectAll("text.edge-label").classed("edge-label-suppressed", true);
 
   // next, highlight clicked node
-  d3.select(`#node-${data.id}`)
+  d3.select(`#node-${data._id}`)
     .select("circle")
     .classed("node-suppressed", false);
-  d3.select(`#node-${data.id}`)
+  d3.select(`#node-${data._id}`)
     .select("text")
     .classed("node-label-suppressed", false);
 
   d3.selectAll(".edge")
     .filter((v: any): any => {
       // then highlight connected nodes
-      if (data.id == v.source.id) {
-        const nodeId = `#node-${v.target.id}`;
+      if (data._id == v.source._id) {
+        const nodeId = `#node-${v.target._id}`;
         d3.select(nodeId).select("circle").classed("node-suppressed", false);
         d3.select(nodeId)
           .select("text")
           .classed("node-label-suppressed", false);
         return true;
-      } else if (data.id == v.target.id) {
-        const nodeId = `#node-${v.source.id}`;
+      } else if (data._id == v.target._id) {
+        const nodeId = `#node-${v.source._id}`;
         d3.select(nodeId).select("circle").classed("node-suppressed", false);
         d3.select(nodeId)
           .select("text")
@@ -227,7 +261,7 @@ function highlight(_event: any, data: any) {
     })
     // finally highlight connected edges
     .each((d: any) => {
-      const edgeId = `#edge-${d.source.id}-${d.target.id}-`;
+      const edgeId = `#edge-${d.source._id}-${d.target._id}-`;
       d3.select(edgeId).select("line").classed("edge-suppressed", false);
       d3.select(edgeId).select("text").classed("edge-label-suppressed", false);
     });
@@ -248,7 +282,13 @@ function clearHighlight(event: any, _data: any) {
 // ----
 // main
 // ----
-export const d3HumanNetwork = function (data: any): void {
+export const d3HumanNetwork = function (data: Graph): void {
+  // add unique _id to each element
+  const graphData = generateGraphData(data);
+  console.log(data);
+  console.log(graphData);
+
+  // ramove current graph
   d3.select("#graph > svg").remove();
 
   const svg = d3
@@ -257,20 +297,22 @@ export const d3HumanNetwork = function (data: any): void {
     .attr("height", height)
     .attr("width", width)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .on("click", (event: any, data: any) => clearHighlight(event, data));
+    .on("click", (e, d) => clearHighlight(e, d));
   const g = svg.append("g").attr("cursor", "grab");
+  const simulation = defineSimulation(graphData.nodes, graphData.edges);
+  const drag = defineDrag(simulation);
   const tooltip = d3
     .select("body")
     .append("div")
     .attr("class", "tooltip")
     .style("visibility", "hidden")
     .style("z-index", 1000);
-
-  const simulation = defineSimulation(data.nodes, data.edges);
-  const drag = defineDrag(simulation);
   const zoom = defineZoom(g);
-  const edges = defineLinks(g, data.edges);
-  const edgeLabels = defineLinkLabels(g);
-  const nodes = defineNodes(g, data.nodes, drag, tooltip);
+
+  // render edges first to keep them behind nodes
+  const edges = defineEdges(g, graphData.edges);
+  const edgeLabels = defineEdgeLabels(g);
+  const nodes = defineNodes(g, graphData.nodes, drag, tooltip);
+
   render(svg, zoom, simulation, nodes, edges, edgeLabels);
 };

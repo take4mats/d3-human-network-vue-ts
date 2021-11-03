@@ -17,20 +17,20 @@ def import_csv(filename=None):
 
 # nodes にない source/target がいたら nodes に追加。 group はデフォルト値
 def compensate_nodes(nodes, edges):
-    node_ids = list(map(lambda d: d['id'], nodes))
+    node_names = list(map(lambda d: d['name'], nodes))
     for edge in edges:
-        if edge['source'] not in node_ids:
-            node_ids.append(edge['source'])
-            nodes.append({'id': edge['source'], 'group': 'default'})
-        if edge['target'] not in node_ids:
-            node_ids.append(edge['target'])
-            nodes.append({'id': edge['target'], 'group': 'default'})
+        if edge['source'] not in node_names:
+            node_names.append(edge['source'])
+            nodes.append({'name': edge['source'], 'group': 'default'})
+        if edge['target'] not in node_names:
+            node_names.append(edge['target'])
+            nodes.append({'name': edge['target'], 'group': 'default'})
     return nodes
 
 
 def transform(nodes, edges):
     new_nodes = list(map(lambda d: {
-        'id': str(d['id']),
+        'name': str(d['name']),
         'group': str(d.get('group', 'default')),
     }, nodes))
 
