@@ -467,6 +467,7 @@ circle {
 }
 .node-suppressed {
   fill: #ccc;
+  fill-opacity: 0.4;
 }
 .node-label {
   text-anchor: middle;
@@ -479,8 +480,8 @@ circle {
 
 line {
   stroke: grey;
-  stroke-width: 5px;
-  stroke-opacity: 0.6;
+  stroke-width: 3px;
+  stroke-opacity: 0.4;
 }
 .edge-label {
   text-anchor: middle;
@@ -490,10 +491,11 @@ line {
 .edge-suppressed {
   stroke: grey;
   stroke-width: 1px;
+  stroke-opacity: 0.1;
 }
 .edge-label-suppressed {
   color: #ccc;
-  font-size: 5px;
+  font-size: 1px;
 }
 
 .tooltip {
