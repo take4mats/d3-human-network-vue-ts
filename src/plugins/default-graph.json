@@ -1,19 +1,19 @@
 {
   "nodes": [
     {
-      "id": "John",
+      "name": "John",
       "group": "vocals"
     },
     {
-      "id": "Paul",
+      "name": "Paul",
       "group": "bass"
     },
     {
-      "id": "George",
+      "name": "George",
       "group": "guitars"
     },
     {
-      "id": "Ringo",
+      "name": "Ringo",
       "group": "drums"
     }
   ],
