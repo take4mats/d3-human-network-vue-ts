@@ -16,6 +16,7 @@ import {
 import HumanNetwork from "@/components/HumanNetwork.vue"; // @ is an alias to /src
 
 export default defineComponent({
+  // eslint-disable-next-line
   name: "Home",
   components: {
     HumanNetwork,
