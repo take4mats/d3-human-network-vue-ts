@@ -20,7 +20,7 @@ Check out [the real app running here.](https://take4mats.github.io/d3-human-netw
     - Convert the 2 CSV files into 1 JSON file, by using the script `util/csv2json.py`.  For example:
     ```sh
     $ cd contrib/
-    $ python csv2json.py nodes-example.csv links-example.csv data.json
+    $ python csv2json.py nodes-example.csv edges-example.csv data.json
     ```
 
 2. Run locally
