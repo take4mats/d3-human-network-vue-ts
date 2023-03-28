@@ -1,18 +1,27 @@
 module.exports = {
   root: true,
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint"],
   env: {
-    node: true,
+    browser: true,
+    es2021: true,
   },
-  extends: [
-    "plugin:vue/essential",
-    "eslint:recommended",
-    "@vue/typescript/recommended",
-    "@vue/prettier",
-  ],
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: "./tsconfig.eslint.json",
+    tsconfigRootDir: __dirname,
   },
+  ignorePatterns: ["build"],
+  extends: [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier",
+  ],
   rules: {
+    "import/prefer-default-export": "off",
+    "@typescript-eslint/quotes": ["error", "double"],
     "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
     "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",
   },
