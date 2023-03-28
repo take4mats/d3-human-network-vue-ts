@@ -17,15 +17,22 @@ interface Graph {
 type Member = string;
 
 interface D3Node {
-  _id: string;
+  x: number;
+  y: number;
+  i: string;
   name: string;
   group: string;
 }
 
+type D3Position = {
+  x: number;
+  y: number;
+};
+
 interface D3Edge {
-  _id: string;
-  source: string;
-  target: string;
+  i: string;
+  source: D3Position;
+  target: D3Position;
   value: string;
 }
 
@@ -34,4 +41,9 @@ interface D3Graph {
   edges: D3Edge[];
 }
 
-export { Node, Edge, Graph, Member, D3Node, D3Edge, D3Graph };
+interface D3Label {
+  source: D3Position;
+  target: D3Position;
+}
+
+export { Node, Edge, Graph, Member, D3Node, D3Edge, D3Label, D3Graph };

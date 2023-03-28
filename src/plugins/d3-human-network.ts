@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*
   Copyright 2021 Takeshi George Matsuda (https://github.com/take4mats)
 
@@ -15,7 +16,15 @@
 */
 
 import * as d3 from "d3";
-import { Node, Edge, Graph, D3Graph, D3Edge, D3Node } from "@/types/graph";
+import {
+  Node,
+  Edge,
+  Graph,
+  D3Graph,
+  D3Edge,
+  D3Node,
+  D3Label,
+} from "@/types/graph";
 
 const width = 1200;
 const height = 800;
@@ -24,31 +33,30 @@ const edgeDistance = 200;
 const chargeStrength = -400;
 
 function render(
-  d3svg: any,
-  zoom: any,
-  simulation: any,
-  nodes: any,
-  edges: any,
-  edgeLabels: any
+  d3svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>,
+  zoom: d3.ZoomBehavior<Element, unknown>,
+  simulation: d3.Simulation<D3Node, undefined>,
+  nodes: d3.Selection<SVGGElement, D3Node, SVGGElement, unknown>,
+  edges: d3.Selection<SVGLineElement, D3Edge, SVGGElement, unknown>,
+  edgeLabels: d3.Selection<SVGTextElement, unknown, SVGGElement, unknown>
 ) {
   // maintain the topology
   simulation.on("tick", () => {
     nodes
-      .attr("cx", (d: any) => d.x)
-      .attr("cy", (d: any) => d.y)
-      .attr("transform", (d: any) => {
-        return `translate(${d.x},${d.y})`;
-      });
+      .attr("cx", (d: D3Node) => d.x)
+      .attr("cy", (d: D3Node) => d.y)
+      .attr("transform", (d) => `translate(${d.x},${d.y})`);
 
     edges
-      .attr("x1", (d: any) => d.source.x)
-      .attr("y1", (d: any) => d.source.y)
-      .attr("x2", (d: any) => d.target.x)
-      .attr("y2", (d: any) => d.target.y);
+      .attr("x1", (d: D3Edge) => d.source.x)
+      .attr("y1", (d: D3Edge) => d.source.y);
+    edges
+      .attr("x2", (d: D3Edge) => d.target.x)
+      .attr("y2", (d: D3Edge) => d.target.y);
 
     edgeLabels
-      .attr("x", (d: any) => (d.source.x + d.target.x) / 2)
-      .attr("y", (d: any) => (d.source.y + d.target.y) / 2);
+      .attr("x", (d: D3Label) => (d.source.x + d.target.x) / 2)
+      .attr("y", (d: D3Label) => (d.source.y + d.target.y) / 2);
   });
 
   d3svg.call(zoom); // enable zoom
@@ -58,37 +66,40 @@ function render(
 const color = d3.scaleOrdinal(d3.schemeTableau10);
 
 function generateGraphData(data: Graph): D3Graph {
-  const nodes = data.nodes.map((node: Node, index: number) => {
-    return {
-      _id: String(index),
-      name: node.name,
-      group: node.group,
-    };
-  });
+  const nodes: D3Node[] = data.nodes.map((node: Node, index: number) => ({
+    i: String(index),
+    name: node.name,
+    group: node.group,
+  }));
 
   const edges: D3Edge[] = data.edges.map((edge: Edge, index: number) => {
     const src = nodes.find((ele) => ele.name === edge.source) || {
-      _id: "9999",
+      i: "9999",
     };
     const tgt = nodes.find((ele) => ele.name === edge.target) || {
-      _id: "9999",
+      i: "9999",
     };
     return {
-      _id: String(index),
-      source: src._id,
-      target: tgt._id,
+      i: String(index),
+      source: src.i,
+      target: tgt.i,
       value: edge.value,
     };
   });
 
   return {
-    nodes: nodes,
-    edges: edges,
+    nodes,
+    edges,
   };
 }
 
 // add node data&element
-function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
+function defineNodes(
+  d3g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+  d3nodes: D3Node[],
+  drag,
+  tooltip
+) {
   // define node g
   const n = d3g
     .append("g")
@@ -97,7 +108,7 @@ function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
     .data(d3nodes)
     .enter()
     .append("g")
-    .attr("id", (d: D3Node) => `node-${d._id}`)
+    .attr("id", (d: D3Node) => `node-${d.i}`)
     .attr("class", () => "node");
 
   // define circle under node g
@@ -115,10 +126,10 @@ function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
   n.call(drag);
 
   // enable click action
-  n.on("click", (event: any, data: any) => highlight(event, data));
+  n.on("click", (event, data) => highlight(event, data));
 
   // enable mouse-over/move/out action
-  n.on("mouseover", (_e: any, data: any) => {
+  n.on("mouseover", (_e, data) => {
     tooltip.style("visibility", "visible").html(
       Object.keys(data)
         .map((key) => {
@@ -128,10 +139,10 @@ function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
         .join("")
     );
   })
-    .on("mousemove", (event: any) => {
+    .on("mousemove", (event) => {
       tooltip
-        .style("top", event.pageY - 60 + "px")
-        .style("left", event.pageX + 20 + "px");
+        .style("top", `${event.pageY - 60}px`)
+        .style("left", `${event.pageX + 20}px`);
     })
     .on("mouseout", () => {
       tooltip.style("visibility", "hidden");
@@ -141,7 +152,10 @@ function defineNodes(d3g: any, d3nodes: D3Node[], drag: any, tooltip: any) {
 }
 
 // add edge data&element
-function defineEdges(d3g: any, d3edges: D3Edge[]) {
+function defineEdges(
+  d3g: d3.Selection<SVGGElement, unknown, HTMLElement, any>,
+  d3edges: D3Edge[]
+) {
   const l = d3g
     .append("g")
     .attr("class", "edges")
@@ -149,9 +163,9 @@ function defineEdges(d3g: any, d3edges: D3Edge[]) {
     .data(d3edges)
     .enter()
     .append("g")
-    .attr("id", (d: any) => {
+    .attr("id", (d) => {
       console.log(d);
-      return `edge-${d.source._id}-${d.target._id}-`;
+      return `edge-${d.source.i}-${d.target.i}-`;
     })
     .attr("class", () => "edge")
     .append("line");
@@ -159,20 +173,22 @@ function defineEdges(d3g: any, d3edges: D3Edge[]) {
   return l;
 }
 
-function defineEdgeLabels(d3g: any) {
+function defineEdgeLabels(
+  d3g: d3.Selection<SVGGElement, unknown, HTMLElement, any>
+) {
   const ll = d3g
     .selectAll(".edges > g")
     .append("text")
     .attr("class", "edge-label")
-    .attr("x", (d: any) => (d.source.x + d.target.x) / 2)
-    .attr("y", (d: any) => (d.source.y + d.target.y) / 2)
-    .text((d: any) => d.value);
+    .attr("x", (d) => (d.source.x + d.target.x) / 2)
+    .attr("y", (d) => (d.source.y + d.target.y) / 2)
+    .text((d) => d.value);
 
   return ll;
 }
 
 // create a new force simulation graph
-function defineSimulation(d3nodes: any, d3edges: any) {
+function defineSimulation(d3nodes: D3Node[], d3edges: D3Edge[]) {
   const sim = d3
     .forceSimulation(d3nodes)
     .force(
@@ -180,7 +196,7 @@ function defineSimulation(d3nodes: any, d3edges: any) {
       d3
         .forceLink(d3edges)
         .distance(() => edgeDistance)
-        .id((d: any) => d._id)
+        .id((d) => d.i)
     )
     .force("charge", d3.forceManyBody().strength(chargeStrength))
     .force("center", d3.forceCenter(width / 2, height / 2))
@@ -190,19 +206,19 @@ function defineSimulation(d3nodes: any, d3edges: any) {
 }
 
 // drag utility functions
-function defineDrag(simulation: any) {
-  function dragstarted(event: any) {
+function defineDrag(simulation) {
+  function dragstarted(event) {
     if (!event.active) simulation.alphaTarget(0.9).restart();
     event.subject.fx = event.subject.x;
     event.subject.fy = event.subject.y;
   }
 
-  function dragged(event: any) {
+  function dragged(event) {
     event.subject.fx = event.x;
     event.subject.fy = event.y;
   }
 
-  function dragended(event: any) {
+  function dragended(event) {
     if (!event.active) simulation.alphaTarget(0).alphaMin(0.2);
     event.subject.fx = null;
     event.subject.fy = null;
@@ -216,16 +232,16 @@ function defineDrag(simulation: any) {
 }
 
 // zoom utility functions
-function defineZoom(d3g: any) {
+function defineZoom(d3g: d3.Selection<SVGGElement, unknown, HTMLElement, any>) {
   return d3
     .zoom()
     .scaleExtent([0.1, 10])
-    .on("zoom", function (event) {
+    .on("zoom", (event) => {
       d3g.attr("transform", event.transform);
     });
 }
 
-function highlight(_event: any, data: any) {
+function highlight(_event, data) {
   // first, suppress all
   d3.selectAll("circle").classed("node-suppressed", true);
   d3.selectAll("text.node-label").classed("node-label-suppressed", true);
@@ -233,25 +249,26 @@ function highlight(_event: any, data: any) {
   d3.selectAll("text.edge-label").classed("edge-label-suppressed", true);
 
   // next, highlight clicked node
-  d3.select(`#node-${data._id}`)
+  d3.select(`#node-${data.i}`)
     .select("circle")
     .classed("node-suppressed", false);
-  d3.select(`#node-${data._id}`)
+  d3.select(`#node-${data.i}`)
     .select("text")
     .classed("node-label-suppressed", false);
 
   d3.selectAll(".edge")
-    .filter((v: any): any => {
+    .filter((v) => {
       // then highlight connected nodes
-      if (data._id == v.source._id) {
-        const nodeId = `#node-${v.target._id}`;
+      if (data.i == v.source.i) {
+        const nodeId = `#node-${v.target.i}`;
         d3.select(nodeId).select("circle").classed("node-suppressed", false);
         d3.select(nodeId)
           .select("text")
           .classed("node-label-suppressed", false);
         return true;
-      } else if (data._id == v.target._id) {
-        const nodeId = `#node-${v.source._id}`;
+      }
+      if (data.i == v.target.i) {
+        const nodeId = `#node-${v.source.i}`;
         d3.select(nodeId).select("circle").classed("node-suppressed", false);
         d3.select(nodeId)
           .select("text")
@@ -260,14 +277,14 @@ function highlight(_event: any, data: any) {
       }
     })
     // finally highlight connected edges
-    .each((d: any) => {
-      const edgeId = `#edge-${d.source._id}-${d.target._id}-`;
+    .each((d) => {
+      const edgeId = `#edge-${d.source.i}-${d.target.i}-`;
       d3.select(edgeId).select("line").classed("edge-suppressed", false);
       d3.select(edgeId).select("text").classed("edge-label-suppressed", false);
     });
 }
 
-function clearHighlight(event: any, _data: any) {
+function clearHighlight(event) {
   if (
     Object.prototype.toString.call(event.path[0]) === "[object SVGSVGElement]"
   ) {
@@ -283,7 +300,7 @@ function clearHighlight(event: any, _data: any) {
 // main
 // ----
 export const d3HumanNetwork = function (data: Graph): void {
-  // add unique _id to each element
+  // add unique i to each element
   const graphData = generateGraphData(data);
   console.log(data);
   console.log(graphData);
@@ -297,7 +314,7 @@ export const d3HumanNetwork = function (data: Graph): void {
     .attr("height", height)
     .attr("width", width)
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .on("click", (e, d) => clearHighlight(e, d));
+    .on("click", (e) => clearHighlight(e));
   const g = svg.append("g").attr("cursor", "grab");
   const simulation = defineSimulation(graphData.nodes, graphData.edges);
   const drag = defineDrag(simulation);
