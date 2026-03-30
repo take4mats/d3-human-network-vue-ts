@@ -10,7 +10,7 @@
   "dependencies": {
     "@vue/composition-api": "^1.4.9",
     "ajv": "^8.11.0",
-    "vue": "^2.6.11",
+    "vue": "^3.0.0",
     "vue-class-component": "^7.2.6",
     "vue-gtag": "^1.16.1",
     "vue-property-decorator": "^9.1.2",
