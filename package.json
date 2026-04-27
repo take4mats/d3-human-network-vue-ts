@@ -15,7 +15,7 @@
     "vue-gtag": "^1.16.1",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.6.4"
+    "vuetify": "^3.0.0"
   },
   "devDependencies": {
     "@types/ajv": "^1.0.0",
