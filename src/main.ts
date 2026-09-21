@@ -1,22 +1,16 @@
-import Vue from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
-import VueCompositionAPI from "@vue/composition-api";
-import VueGtag from "vue-gtag";
+import { createGtag } from "vue-gtag";
 
-Vue.config.productionTip = false;
+const app = createApp(App);
 
-Vue.use(VueCompositionAPI);
+app.use(router);
+app.use(vuetify);
 
 if (process.env.NODE_ENV === "production") {
-  Vue.use(VueGtag, {
-    config: { id: "G-0EBCZGWZWT" },
-  });
+  app.use(createGtag({ tagId: "G-0EBCZGWZWT" }));
 }
 
-new Vue({
-  router,
-  vuetify,
-  render: (h) => h(App),
-}).$mount("#app");
+app.mount("#app");
