@@ -3,8 +3,8 @@
     <v-expansion-panels focusable popout multiple v-model="panel">
       <!-- Input -->
       <v-expansion-panel>
-        <v-expansion-panel-header> Input </v-expansion-panel-header>
-        <v-expansion-panel-content id="input">
+        <v-expansion-panel-title> Input </v-expansion-panel-title>
+        <v-expansion-panel-text id="input">
           <!-- Tabs -->
           <v-tabs v-model="tab" grow>
             <v-tab>By Form</v-tab>
@@ -12,16 +12,16 @@
           </v-tabs>
 
           <!-- Tabs Items -->
-          <v-tabs-items v-model="tab">
+          <v-window v-model="tab">
             <!-- Form input -->
-            <v-tab-item>
+            <v-window-item>
               <v-card class="mx-auto my-1">
                 <!-- input form -->
                 <v-form
                   class="form"
                   ref="form1"
                   v-model="validForm1"
-                  lazy-validation
+                  validate-on="submit"
                 >
                   <!-- nodes -->
                   <v-container>
@@ -49,29 +49,21 @@
                       <v-col cols="12" md="2">
                         <v-btn
                           class="mx-2"
-                          depressed
-                          fab
-                          dark
-                          x-small
+                          icon="mdi-minus"
+                          size="x-small"
                           color="error"
                           @click="removeNode(index)"
-                        >
-                          <v-icon dark> mdi-minus </v-icon>
-                        </v-btn>
+                        ></v-btn>
                       </v-col>
                     </v-row>
                     <div class="text-center">
                       <v-btn
                         class="mx-2"
-                        depressed
-                        fab
-                        dark
-                        x-small
+                        icon="mdi-plus"
+                        size="x-small"
                         color="primary"
                         @click="addNode"
-                      >
-                        <v-icon dark> mdi-plus </v-icon>
-                      </v-btn>
+                      ></v-btn>
                     </div>
                   </v-container>
 
@@ -86,8 +78,8 @@
                         <v-autocomplete
                           v-model="edge.source"
                           :items="members"
-                          dense
-                          filled
+                          density="compact"
+                          variant="filled"
                           label="Source person"
                           :rules="[memberFieldRule(edge.source)]"
                           required
@@ -97,8 +89,8 @@
                         <v-autocomplete
                           v-model="edge.target"
                           :items="members"
-                          dense
-                          filled
+                          density="compact"
+                          variant="filled"
                           label="Target person"
                           :rules="[memberFieldRule(edge.target)]"
                           required
@@ -115,29 +107,21 @@
                       <v-col cols="12" md="2">
                         <v-btn
                           class="mx-2"
-                          depressed
-                          fab
-                          dark
-                          x-small
+                          icon="mdi-minus"
+                          size="x-small"
                           color="error"
                           @click="removeEdge(index)"
-                        >
-                          <v-icon dark> mdi-minus </v-icon>
-                        </v-btn>
+                        ></v-btn>
                       </v-col>
                     </v-row>
                     <div class="text-center">
                       <v-btn
                         class="mx-2"
-                        depressed
-                        fab
-                        dark
-                        x-small
+                        icon="mdi-plus"
+                        size="x-small"
                         color="primary"
                         @click="addEdge"
-                      >
-                        <v-icon dark> mdi-plus </v-icon>
-                      </v-btn>
+                      ></v-btn>
                     </div>
                   </v-container>
                 </v-form>
@@ -146,14 +130,13 @@
                 <v-card-actions>
                   <v-spacer />
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="warning"
                         rounded
                         @click="buttonInitialize"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Initialize
                       </v-btn>
@@ -162,14 +145,13 @@
                   </v-tooltip>
 
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="default"
                         rounded
                         @click="buttonRestore"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Restore
                       </v-btn>
@@ -178,15 +160,14 @@
                   </v-tooltip>
 
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="primary"
                         rounded
-                        :disabled="!validForm1"
+                        :disabled="validForm1 === false"
                         @click="buttonSaveData1"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Save
                       </v-btn>
@@ -195,20 +176,20 @@
                   </v-tooltip>
                 </v-card-actions>
               </v-card>
-            </v-tab-item>
+            </v-window-item>
 
             <!-- JSON input -->
-            <v-tab-item>
+            <v-window-item>
               <v-card class="mx-auto my-1">
                 <v-card-text>
                   <v-form
                     class="form"
                     ref="form2"
                     v-model="validForm2"
-                    lazy-validation
+                    validate-on="submit"
                   >
                     <v-textarea
-                      outlined
+                      variant="outlined"
                       name="json-input"
                       v-model="jsonInput"
                       :rules="[jsonFieldRule(jsonInput)]"
@@ -221,14 +202,13 @@
                 <v-card-actions>
                   <v-spacer />
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="warning"
                         rounded
                         @click="buttonInitialize"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Initialize
                       </v-btn>
@@ -237,14 +217,13 @@
                   </v-tooltip>
 
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="default"
                         rounded
                         @click="buttonRestore"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Restore
                       </v-btn>
@@ -253,15 +232,14 @@
                   </v-tooltip>
 
                   <v-tooltip top>
-                    <template v-slot:activator="{ on, attrs }">
+                    <template v-slot:activator="{ props }">
                       <v-btn
                         class="mx-2"
                         color="primary"
                         rounded
-                        :disabled="!validForm2"
+                        :disabled="validForm2 === false"
                         @click="buttonSaveData2"
-                        v-bind="attrs"
-                        v-on="on"
+                        v-bind="props"
                       >
                         Save
                       </v-btn>
@@ -270,15 +248,15 @@
                   </v-tooltip>
                 </v-card-actions>
               </v-card>
-            </v-tab-item>
-          </v-tabs-items>
-        </v-expansion-panel-content>
+            </v-window-item>
+          </v-window>
+        </v-expansion-panel-text>
       </v-expansion-panel>
 
       <!-- preview -->
       <v-expansion-panel>
-        <v-expansion-panel-header> Debug View </v-expansion-panel-header>
-        <v-expansion-panel-content>
+        <v-expansion-panel-title> Debug View </v-expansion-panel-title>
+        <v-expansion-panel-text>
           <div id="preview">
             <v-card class="mx-auto my-1">
               <v-card-text>
@@ -288,17 +266,17 @@
               </v-card-text>
             </v-card>
           </div>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
 
       <!-- graph -->
       <v-expansion-panel>
-        <v-expansion-panel-header> Graph </v-expansion-panel-header>
-        <v-expansion-panel-content id="graph-surrounding" class="grey darken-1">
+        <v-expansion-panel-title> Graph </v-expansion-panel-title>
+        <v-expansion-panel-text id="graph-surrounding" class="grey darken-1">
           <v-container>
             <v-row class="ma-auto" id="graph" justify="center"></v-row>
           </v-container>
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
   </v-container>
@@ -307,7 +285,7 @@
 <script lang="ts">
 // eslint-disable-next-line
 // @ts-nocheck
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue";
 import { d3HumanNetwork } from "@/plugins/d3-human-network";
 import Ajv from "ajv";
 import GraphSchema from "@/schemas/graph";
@@ -319,8 +297,8 @@ export default defineComponent({
   data: () => ({
     panel: [2],
     tab: null,
-    validForm1: true as boolean,
-    validForm2: true as boolean,
+    validForm1: true as boolean | null,
+    validForm2: true as boolean | null,
 
     graph: {
       nodes: [],
@@ -403,15 +381,17 @@ export default defineComponent({
       this.restoreInput();
     },
 
-    buttonSaveData1(): void {
-      if (this.$refs.form1.validate() === true) {
+    async buttonSaveData1(): Promise<void> {
+      const { valid } = await this.$refs.form1.validate();
+      if (valid) {
         this.graph = JSON.parse(JSON.stringify(this.formInput, null, 4));
         this.jsonInput = JSON.stringify(this.formInput, null, 4);
       }
     },
 
-    buttonSaveData2(): void {
-      if (this.$refs.form2.validate() === true) {
+    async buttonSaveData2(): Promise<void> {
+      const { valid } = await this.$refs.form2.validate();
+      if (valid) {
         this.graph = JSON.parse(this.jsonInput);
         this.formInput = JSON.parse(this.jsonInput);
       }
