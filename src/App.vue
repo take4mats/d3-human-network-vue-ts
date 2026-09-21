@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app dense flat class="primary" dark hide-on-scroll>
-      <v-btn to="/" text plain>
+    <v-app-bar app density="compact" flat color="primary" hide-on-scroll>
+      <v-btn to="/" variant="plain">
         <v-icon>mdi-star-david</v-icon>
         &nbsp;
         <pre>d3-human-network</pre>
@@ -12,7 +12,7 @@
       <v-btn
         href="https://github.com/take4mats/d3-human-network-vue-ts"
         target="_blank"
-        text
+        variant="text"
       >
         <v-icon>mdi-github</v-icon>
       </v-btn>
@@ -22,7 +22,7 @@
       <router-view />
     </v-main>
 
-    <v-footer padless dark>
+    <v-footer theme="dark">
       <v-col class="text-left" cols="12">
         Copyright {{ new Date().getFullYear() }} @take4mats (george)
       </v-col>
@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "App",
 
   data: () => ({

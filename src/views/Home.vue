@@ -5,13 +5,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  // reactive,
-  // computed,
-  // watch,
-  // onMounted,
-} from "@vue/composition-api";
+import { defineComponent } from "vue";
 
 import HumanNetwork from "@/components/HumanNetwork.vue"; // @ is an alias to /src
 
