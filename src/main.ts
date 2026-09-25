@@ -9,7 +9,7 @@ const app = createApp(App);
 app.use(router);
 app.use(vuetify);
 
-if (process.env.NODE_ENV === "production") {
+if (import.meta.env.PROD) {
   app.use(createGtag({ tagId: "G-0EBCZGWZWT" }));
 }
 

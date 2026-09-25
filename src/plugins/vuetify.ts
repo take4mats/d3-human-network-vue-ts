@@ -1,9 +1,5 @@
 import "vuetify/styles";
 import { createVuetify } from "vuetify";
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
 
-export default createVuetify({
-  components,
-  directives,
-});
+// Components and directives are imported on demand by vite-plugin-vuetify.
+export default createVuetify();
