@@ -12,7 +12,7 @@
     "vue": "^3.5.13",
     "vue-gtag": "^3.7.1",
     "vue-router": "^4.5.0",
-    "vuetify": "^3.7.0"
+    "vuetify": "^4.0.0"
   },
   "devDependencies": {
     "@types/ajv": "^1.0.0",
