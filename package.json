@@ -6,9 +6,9 @@
   "scripts": {
     "serve": "vite",
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --build && vite build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit",
+    "type-check": "vue-tsc --build",
     "lint": "eslint --fix .",
     "format": "prettier --write src/"
   },
