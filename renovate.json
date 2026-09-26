@@ -1,6 +1,30 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "ESLint, Prettier and their Vue/TypeScript configs must move together",
+      "groupName": "lint tooling",
+      "matchPackageNames": [
+        "eslint",
+        "eslint-plugin-vue",
+        "prettier",
+        "@vue/eslint-config-prettier",
+        "@vue/eslint-config-typescript"
+      ]
+    },
+    {
+      "description": "Build toolchain: Vite, its Vue/Vuetify plugins and type checking",
+      "groupName": "build tooling",
+      "matchPackageNames": [
+        "vite",
+        "@vitejs/plugin-vue",
+        "vite-plugin-vuetify",
+        "vue-tsc",
+        "@vue/tsconfig"
+      ]
+    }
   ]
 }

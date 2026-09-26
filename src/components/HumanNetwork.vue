@@ -288,9 +288,9 @@
 import { defineComponent } from "vue";
 import { d3HumanNetwork } from "@/plugins/d3-human-network";
 import Ajv from "ajv";
-import GraphSchema from "@/schemas/graph";
-import DefaultGraph from "@/plugins/default-graph";
-import { Node, Edge, Graph, Member } from "@/types/graph";
+import GraphSchema from "@/schemas/graph.json";
+import DefaultGraph from "@/plugins/default-graph.json";
+import type { Node, Edge, Graph, Member } from "@/types/graph";
 
 export default defineComponent({
   name: "HumanNetwork",
@@ -334,7 +334,7 @@ export default defineComponent({
 
   methods: {
     addNode(): void {
-      let emptyNode: Node = {
+      const emptyNode: Node = {
         name: "",
         group: "",
       };
@@ -348,7 +348,7 @@ export default defineComponent({
     },
 
     addEdge(): void {
-      let emptyEdge: Edge = {
+      const emptyEdge: Edge = {
         source: "",
         target: "",
         value: "",

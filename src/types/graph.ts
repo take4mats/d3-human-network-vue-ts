@@ -34,4 +34,4 @@ interface D3Graph {
   edges: D3Edge[];
 }
 
-export { Node, Edge, Graph, Member, D3Node, D3Edge, D3Graph };
+export type { Node, Edge, Graph, Member, D3Node, D3Edge, D3Graph };

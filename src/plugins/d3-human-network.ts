@@ -15,7 +15,7 @@
 */
 
 import * as d3 from "d3";
-import { Node, Edge, Graph, D3Graph, D3Edge, D3Node } from "@/types/graph";
+import type { Node, Edge, Graph, D3Graph, D3Edge, D3Node } from "@/types/graph";
 
 const width = 1200;
 const height = 800;
