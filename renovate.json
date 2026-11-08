@@ -1,12 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "github>take4mats/github-settings//renovate/base"
   ],
-  "minimumReleaseAge": "7 days",
-  "vulnerabilityAlerts": {
-    "minimumReleaseAge": null
-  },
   "packageRules": [
     {
       "description": "ESLint, Prettier and their Vue/TypeScript configs must move together",
