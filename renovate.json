@@ -31,6 +31,13 @@
         "vue-tsc",
         "@vue/tsconfig"
       ]
+    },
+    {
+      "description": "vue-tsc 3.x は TypeScript 7 (ネイティブ版) で起動できない (typescript/lib/tsc が exports にない)。vue-tsc が対応するまで 7 以上を保留する",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7"
     }
   ]
 }
