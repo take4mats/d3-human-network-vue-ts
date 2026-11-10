@@ -1,8 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "public リポジトリのため private な take4mats/github-settings のプリセットを参照できない。renovate/base.json の内容をインライン展開している（変更時は両方を更新すること）",
   "extends": [
-    "github>take4mats/github-settings//renovate/base"
+    "config:recommended",
+    ":timezone(Asia/Tokyo)"
   ],
+  "minimumReleaseAge": "7 days",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
   "packageRules": [
     {
       "description": "ESLint, Prettier and their Vue/TypeScript configs must move together",
