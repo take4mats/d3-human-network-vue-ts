@@ -1,8 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "公開リポジトリは非公開の github-settings の preset を参照できないため、renovate/base.json の内容を直接記述している。base.json を変えたらここも合わせる。",
   "extends": [
-    "github>take4mats/github-settings//renovate/base"
+    "config:recommended",
+    ":timezone(Asia/Tokyo)"
   ],
+  "minimumReleaseAge": "7 days",
+  "vulnerabilityAlerts": {
+    "minimumReleaseAge": null
+  },
   "packageRules": [
     {
       "description": "ESLint, Prettier and their Vue/TypeScript configs must move together",
