@@ -31,6 +31,13 @@
         "vue-tsc",
         "@vue/tsconfig"
       ]
+    },
+    {
+      "description": "TypeScript 7 (native) is not yet supported by typescript-eslint (peer typescript <6.1.0) (#93); remove once it is",
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7"
     }
   ]
 }
